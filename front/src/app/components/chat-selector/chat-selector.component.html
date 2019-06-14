@@ -1,0 +1,12 @@
+<mat-card id="serveurSelection">
+    <mat-select (selectionChange)="onChangeServer($event)" [value]="currentServerName">
+        <mat-option *ngFor="let name of serverNames" [value]="name">
+            {{ name }}
+        </mat-option>
+    </mat-select>
+    <button mat-raised-button color="warn" (click)="onClickRemove()"> - </button>
+</mat-card>
+<mat-card>
+    <input matInput placeholder="Create server" [(ngModel)]="newName">
+    <button mat-raised-button color="primary" (click)="onClickAdd()"> + </button>
+</mat-card>

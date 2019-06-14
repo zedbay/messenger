@@ -1,0 +1,15 @@
+<mat-card *ngIf="!userIsLogin">
+    <form #loginForm="ngForm" (ngSubmit)="onSubmit(loginForm)">
+        <mat-form-field class="example-full-width">
+            <input matInput placeholder="Your email" type="email" id="email" name="email" [(ngModel)]="email">
+        </mat-form-field>
+        <mat-form-field class="example-full-width">
+            <input matInput placeholder="Your password" type="password" id="password" name="password"
+                [(ngModel)]="password">
+        </mat-form-field>
+        <button mat-flat-button color="primary" type="submit">Connexion</button>
+    </form>
+</mat-card>
+<mat-card *ngIf="userIsLogin">
+    <button mat-flat-button color="primary" (click)="onSignOut()">Deconnexion</button>
+</mat-card>

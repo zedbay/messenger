@@ -1,0 +1,32 @@
+version: "3"
+services:
+
+  neo4j: 
+    image: neo4j:latest
+    ports:
+      - 7474:7474
+      - 7687:7687
+    volumes:
+      - ./data:/data
+    networks:
+      - the-ws-network
+
+  express:
+    image: node:latest
+    working_dir: /usr/src/app/back
+    ports:
+      - "8085:8085"
+    expose:
+      - "8085"
+    links:
+      - "neo4j:neo4j"
+    depends_on:
+      - neo4j
+    volumes:
+      - ./back:/usr/src/app/back
+    command: bash -c "npm i && npm run dev"
+    networks:
+      - the-ws-network
+
+networks:
+  the-ws-network:
