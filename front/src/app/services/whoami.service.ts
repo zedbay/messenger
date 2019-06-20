@@ -34,15 +34,14 @@ export class WhoamiService {
         this.userIslogin.emit(false);
     }
 
-    get Claims(): Map<string, any> {
-        if (!this.currentStatus) {
-            return null
-        }
+    get claims(): Map<string, any> {
         const token = localStorage.getItem('token');
         const tokenDecode = JWT(token);
         let identity = new Map();
         identity.set('id', tokenDecode['id']['low']);
         identity.set('type', tokenDecode['type']);
+        identity.set('name', tokenDecode['name']);
+        identity.set('firstName', tokenDecode['firstName']);
         return identity;
     }
 

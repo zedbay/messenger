@@ -41,15 +41,20 @@ export class MyServer {
     }
 
     private joinRoom(socket: any, informations: any) {
+        if (!Security.tokenIsOk(informations.token)) {
+            return;
+        }
+        const claims = Security.getIdentity(informations.token);
+        const name = claims.get('firstName') + ' ' + claims.get('name');
         this.io.to(informations.roomName).emit('message',
-            Message.adminMessage('1 user join the room', informations.roomName)
+            Message.adminMessage(name + ' join the room', informations.roomName)
         );
         socket.join(informations.roomName);
     }
 
     private async onMessage(m: Message) {
         if (!Security.tokenIsOk(m.from.token)) {
-            return
+            return;
         }
         let res = await MessageHandler.add(m).catch(() => { console.error('[server:onMessage] échec'); });
         if (res) this.io.to(m.room).emit('message', m);

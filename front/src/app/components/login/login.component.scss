@@ -1,7 +1,22 @@
+.login-container {
+    height: 20%;
+    box-shadow: 0 6px 15px 0 rgba(167, 168, 168, 0.24);
+    z-index: 5;
+    padding: 1em;
+    box-sizing: border-box;
+}
+
 form {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     flex-wrap: nowrap;
     align-items: center;
     justify-content: space-around;
+    mat-form-field {
+        width: 100%;
+        margin-bottom: 1em;
+    }
+    button {
+        width: 100%;
+    }
 }

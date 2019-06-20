@@ -1,12 +1,11 @@
 :host() {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    background-color: antiquewhite;
+    width: 80%;
+    background-color: #F2E8C9;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    padding: 1em;
 }
 
 app-chat-selector {
@@ -29,9 +28,6 @@ app-login {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    .whoami {
-
-    }
     .messages { 
         padding: .5em;
         height: 100%;

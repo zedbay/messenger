@@ -3,6 +3,7 @@ import * as io from 'socket.io-client';
 import { User, Message } from '../models/chat.model';
 import { Observable } from 'rxjs';
 import { NetworkService } from './network.service';
+import { WhoamiService } from './whoami.service';
 
 @Injectable({
 	providedIn: 'root'
@@ -14,7 +15,9 @@ export class ChatService {
 	public notifyChangementOfServer: EventEmitter<string> = new EventEmitter<string>();
 	public notifyServerChangement: EventEmitter<any> = new EventEmitter<any>();
 
-	constructor(private networkService: NetworkService) {
+	constructor(
+		private networkService: NetworkService,
+		private whoAmiService: WhoamiService) {
 		this.connect();
 		this.loadServer();
 	}
@@ -35,7 +38,7 @@ export class ChatService {
 		this.socket.emit('leaveRoom', { roomName: this.currentRoom });
 		this.currentRoom = newServerName;
 		this.notifyChangementOfServer.emit(newServerName);
-		this.socket.emit('joinRoom', { roomName: newServerName });
+		this.socket.emit('joinRoom', { roomName: newServerName, token: localStorage.getItem('token') });
 	}
 
 	public onAddServer(name: string) {
@@ -52,7 +55,9 @@ export class ChatService {
 	}
 
 	public send(content: string): void {
-		const user = new User("test", localStorage.getItem('token'));
+		const claims = this.whoAmiService.claims;
+		const name = claims.get('firstName') + ' ' + claims.get('name');
+		const user = new User(name, localStorage.getItem('token'));
 		const message = new Message(user, content, this.currentRoom);
 		this.socket.emit('message', message);
 	}

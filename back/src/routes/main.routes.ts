@@ -1,6 +1,7 @@
 import { Router, Express } from "express";
 import { ServerRoutes } from "./server.routes";
 import { UserRoutes } from "./user.routes";
+import { MessageRoutes } from './message.routes';
 
 export class MainRouter {
 
@@ -11,6 +12,7 @@ export class MainRouter {
         });
         express.use("/", router);
         ServerRoutes.init(express);
+        MessageRoutes.init(express);
         UserRoutes.init(express);
     }
 
