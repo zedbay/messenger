@@ -57,4 +57,7 @@ CREATE (Toby)-[:FRIEND]->(Andy)
 CREATE (Darryl)-[:FRIEND]->(Andy)
 CREATE (Darryl)-[:FRIEND]->(Phyllis)
 
+
+
+
 MATCH (m:Message), (s:Serveur { name: "Welcome" }), (u:User) WHERE (m)-[:IN]->(s) AND (u)-[:SEND]->(m) RETURN u, m

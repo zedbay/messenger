@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from "@angular/forms";
 import { ChatService } from '../../services/chat.service';
-import { Observable } from 'rxjs';
-import { Message, User } from '../../models/chat.model';
 import { NetworkService } from 'src/app/services/network.service';
 
 @Component({
@@ -12,43 +10,38 @@ import { NetworkService } from 'src/app/services/network.service';
 })
 export class ChatComponent implements OnInit {
 
-    public whoami: string = 'Antoine';
     public message: string;
-    public messages: Message[] = [];
-    private onMessage: Observable<Message>;
+	public messages: any[] = [];
+	public currentIdUser: number;
 
     constructor(
         private chatService: ChatService,
         private networkService: NetworkService) { }
 
     ngOnInit() {
-        this.onMessage = this.chatService.onMessage();
-        this.onMessage.subscribe((data: Message) => {
+        this.chatService.onMessage().subscribe((data: any) => {
             this.onReceivedMessage(data);
         });
-        this.chatService.notifyChangementOfServer.subscribe((nameServer: string) => {
-            this.onChangeServer(nameServer);
+        this.chatService.notifyChangementOfServer.subscribe((idUser: number) => {
+			this.currentIdUser = idUser;
+			this.onChangeServer();
         });
     }
 
-    private onReceivedMessage(message: Message) {
-        this.messages.push(message);
+    private onReceivedMessage(message: any) {
+		this.messages.push(message.resultat);
     }
 
     public onSend(form: NgForm) {
-        this.chatService.send(form.value.message);
-        this.message = "";
+		this.chatService.send(this.currentIdUser ,this.message);
+		this.message = "";
     }
 
-    private onChangeServer(newvalue: string) {
-        this.messages = [];
-        this.networkService.get('/server/' + newvalue).subscribe((messages) => {
-            for (let i = 0; i < messages.messages.length; i++) {
-                let user = new User(messages.users[i].properties.firstName + " " + messages.users[i].properties.name);
-                let message = new Message(user, messages.messages[i].properties.content, newvalue);
-                this.messages.push(message);
-            }
-        });
+    private onChangeServer() {
+		this.messages = [];
+		this.networkService.get('/room/' + this.currentIdUser).subscribe((messages) => {
+			console.log(messages);
+		});
     }
 
 }

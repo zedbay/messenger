@@ -1,70 +1,45 @@
 import { Injectable, EventEmitter } from '@angular/core';
 import * as io from 'socket.io-client';
-import { User, Message } from '../models/chat.model';
 import { Observable } from 'rxjs';
-import { NetworkService } from './network.service';
-import { WhoamiService } from './whoami.service';
-
 @Injectable({
 	providedIn: 'root'
 })
 export class ChatService {
 
 	private socket;
-	private currentRoom: string;
-	public notifyChangementOfServer: EventEmitter<string> = new EventEmitter<string>();
-	public notifyServerChangement: EventEmitter<any> = new EventEmitter<any>();
+	public notifyChangementOfServer: EventEmitter<any> = new EventEmitter<any>();
 
-	constructor(
-		private networkService: NetworkService,
-		private whoAmiService: WhoamiService) {
+	constructor() {
 		this.connect();
-		this.loadServer();
 	}
 
 	private connect() {
 		this.socket = io('http://localhost:8085');
 	}
 
-	private loadServer() {
-		this.networkService.get('/server').subscribe((servers) => {
-			this.notifyServerChangement.emit(
-				servers.data.map(element => element.properties.name)
-			);
+	public onChangeChatServer(userID: number) {
+		this.socket.emit('joinRoom', {
+			token: localStorage.getItem('token'),
+			user: userID
+		});
+		this.notifyChangementOfServer.emit(userID);
+	}
+
+	public getMessagesForRoom() {
+		
+	}
+
+	public send(userID: number, message: string) {
+		this.socket.emit('message', {
+			token: localStorage.getItem('token'),
+			user: userID,
+			content: message
 		});
 	}
 
-	public onChangeChatServer(newServerName : string) {
-		this.socket.emit('leaveRoom', { roomName: this.currentRoom });
-		this.currentRoom = newServerName;
-		this.notifyChangementOfServer.emit(newServerName);
-		this.socket.emit('joinRoom', { roomName: newServerName, token: localStorage.getItem('token') });
-	}
-
-	public onAddServer(name: string) {
-		this.networkService.post('/server', { newName: name }).subscribe(() => {
-			this.loadServer();
-			this.onChangeChatServer(name);
-		});
-	}
-
-	public onRemoveServer(name: string) {
-		this.networkService.delete('/server/' + name).subscribe(() => {
-			this.loadServer();
-		});
-	}
-
-	public send(content: string): void {
-		const claims = this.whoAmiService.claims;
-		const name = claims.get('firstName') + ' ' + claims.get('name');
-		const user = new User(name, localStorage.getItem('token'));
-		const message = new Message(user, content, this.currentRoom);
-		this.socket.emit('message', message);
-	}
-
-	public onMessage(): Observable<Message> {
-		return new Observable<Message>(observer => {
-			this.socket.on('message', (data: Message) => {
+	public onMessage(): Observable<any> {
+		return new Observable<any>(observer => {
+			this.socket.on('message', (data: any) => {
 				observer.next(data);
 			});
 		});

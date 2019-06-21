@@ -20,7 +20,6 @@ export class UserHandler {
                 u1`;
         Neo4j.execute(request)
             .then(friends => {
-                console.log(friends);
                 return res.status(200).json({ data: friends.records.map(element => element.get(0)) });
             })
             .catch((error) => {

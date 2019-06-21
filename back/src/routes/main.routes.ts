@@ -1,5 +1,5 @@
 import { Router, Express } from "express";
-import { ServerRoutes } from "./server.routes";
+import { RoomRoutes } from "./room.routes";
 import { UserRoutes } from "./user.routes";
 import { MessageRoutes } from './message.routes';
 
@@ -11,7 +11,7 @@ export class MainRouter {
             return res.status(200).json({ isAlive: true });
         });
         express.use("/", router);
-        ServerRoutes.init(express);
+        RoomRoutes.init(express);
         MessageRoutes.init(express);
         UserRoutes.init(express);
     }

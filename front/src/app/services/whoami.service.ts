@@ -20,6 +20,10 @@ export class WhoamiService {
                 }
             });
         }
+	}
+
+    public getFriends(): Promise<any> {
+        return this.networkService.get('/user/friends').toPromise();
     }
 
     public onLogin(credentials: any) {
@@ -32,7 +36,11 @@ export class WhoamiService {
     public onSignOut() {
         localStorage.removeItem('token');
         this.userIslogin.emit(false);
-    }
+	}
+	
+	get identity() {
+		return this.networkService.get('/whoami').toPromise();
+	}
 
     get claims(): Map<string, any> {
         const token = localStorage.getItem('token');

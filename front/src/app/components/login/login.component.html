@@ -11,8 +11,10 @@
             <button mat-flat-button color="primary" type="submit">Connexion</button>
         </form>
     </div>
-    <div *ngIf="userIsLogin">
-        <button mat-flat-button color="primary" (click)="onSignOut()">Deconnexion</button>
+    <div *ngIf="userIsLogin && whoami" class="whoami">
+		<img src="../../../assets/users/{{ whoami.properties.photo }}" alt="{{ whoami.properties.firstName }}">
+		<p>{{ whoami.properties.firstName }} {{ whoami.properties.name }}</p>
+        <!-- <button mat-flat-button color="primary" (click)="onSignOut()">Deconnexion</button> -->
     </div>
 </div>
 

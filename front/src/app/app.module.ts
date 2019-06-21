@@ -6,7 +6,6 @@ import { FormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ChatComponent } from './components/chat/chat.component';
-import { ChatSelectorComponent } from './components/chat-selector/chat-selector.component';
 import { HttpClientModule } from '@angular/common/http';
 import { LoginComponent } from './components/login/login.component';
 import { FriendListComponent } from './components/friend-list/friend-list.component';
@@ -15,7 +14,6 @@ import { FriendListComponent } from './components/friend-list/friend-list.compon
   declarations: [
     AppComponent,
     ChatComponent,
-    ChatSelectorComponent,
     LoginComponent,
     FriendListComponent
   ],
