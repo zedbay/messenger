@@ -6,6 +6,7 @@ import * as config from '../config.json';
 import { Security } from './security/security';
 import { MessageHandler } from './handlers/message.handlers';
 import { Message } from './models/message.model';
+import { Room } from './models/room.model';
 
 
 export class MyServer {
@@ -22,8 +23,8 @@ export class MyServer {
     }
 
     private onConnect(socket: any) {
-        socket.on('message', (m: Message) => {
-            this.onMessage(m);
+        socket.on('message', (informations: any) => {
+            this.onMessage(informations);
         });
         socket.on('leaveRoom', (roomName: any) => {
             this.leaveRoom(socket, roomName);
@@ -40,18 +41,25 @@ export class MyServer {
         socket.leave(informations.roomName);
     }
 
-    private joinRoom(socket: any, informations: any) {
-        this.io.to(informations.roomName).emit('message',
-            Message.adminMessage('1 user join the room', informations.roomName)
-        );
-        socket.join(informations.roomName);
+    private async joinRoom(socket: any, informations: any) {
+        if (!Security.tokenIsOk(informations.token)) {
+            return;
+        }
+		const claims = Security.getIdentity(informations.token);
+		let resultat = await Room.search(informations.user, claims.get('id'));
+		if (!resultat) {
+			resultat = await Room.create(informations.user, claims.get('id'));
+		}
+		socket.join(resultat.properties.name);
     }
 
-    private async onMessage(m: Message) {
-        if (!Security.tokenIsOk(m.from.token)) {
-            return
-        }
-        let res = await MessageHandler.add(m).catch(() => { console.error('[server:onMessage] échec'); });
-        if (res) this.io.to(m.room).emit('message', m);
+    private async onMessage(informations: any) {
+        if (!Security.tokenIsOk(informations.token)) {
+            return;
+		}
+		const claims = Security.getIdentity(informations.token);
+		const room = await Room.search(claims.get('id'), informations.user);
+		const resultat = await Room.addMessageInRoom(claims.get('id'), informations.user, informations.content);
+		if (resultat) this.io.to(room.properties.name).emit('message', { resultat });
     }
 }

@@ -1,16 +1,15 @@
-<app-login></app-login>
-<app-chat-selector></app-chat-selector>
-<mat-card class="chat-container">
-    <mat-card class="messages">
+<!-- <app-chat-selector></app-chat-selector> -->
+<div class="chat-container">
+    <div class="messages">
         <div class="message" *ngFor="let m of messages">
-            <span>{{ m.from.name }} : </span>
-            <span>{{ m.content }}</span>
+            <span>{{ m.user.properties.firstName }} {{ m.user.properties.name }} : </span>
+            <span>{{ m.message.properties.date }} {{ m.message.properties.content }}</span>
         </div>
-    </mat-card>
+    </div>
     <form #messageForm="ngForm" (ngSubmit)="onSend(messageForm)" class="form">
         <mat-form-field class="example-full-width">
             <input matInput placeholder="Your message" [(ngModel)]="message" id="message" name="message">
         </mat-form-field>
         <button mat-raised-button color="primary" type="submit">Send</button>
     </form>
-</mat-card>
+</div>

@@ -15,7 +15,10 @@ export class Security {
                 { 
                     email: req.body.email,
                     type: response.records[0].get(0).labels[0],
-                    id: response.records[0].get(0).identity
+                    id: response.records[0].get(0).identity,
+                    role: response.records[0].get(0).properties.role,
+                    name: response.records[0].get(0).properties.name,
+                    firstName: response.records[0].get(0).properties.firstName
                 },
                 Security.secretKey,
                 { expiresIn: "1h" }
@@ -29,6 +32,9 @@ export class Security {
         let identity = new Map();
         identity.set('id', tokenDecode['id']['low']);
         identity.set('type', tokenDecode['type']);
+        identity.set('role', tokenDecode['role']);
+        identity.set('name', tokenDecode['name']);
+        identity.set('firstName', tokenDecode['firstName']);
         return identity;
     }
 

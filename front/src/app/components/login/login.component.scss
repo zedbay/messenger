@@ -1,7 +1,42 @@
+.login-container {
+    box-shadow: 0 6px 15px 0 rgba(167, 168, 168, 0.24);
+    z-index: 5;
+    box-sizing: border-box;
+}
+
 form {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     flex-wrap: nowrap;
     align-items: center;
     justify-content: space-around;
+    mat-form-field {
+        width: 100%;
+        margin-bottom: 1em;
+    }
+    button {
+        width: 100%;
+    }
+}
+
+.whoami {
+	background-color: #193257;
+	padding: 1em;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.07);
+	img {
+		border-radius: 100%;
+		height: 8em;
+		width: 8em;
+		border: 2px solid white;
+		margin: 0 0 .5em 0;
+	}
+	p {
+		color: white;
+		font-size: 2em;
+		margin: 0;
+	}
 }

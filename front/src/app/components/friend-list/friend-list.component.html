@@ -1,0 +1,7 @@
+<div class="friend-list-container">
+	<div [ngClass]="friend === selectedFriend ? 'friend selected' : 'friend'" *ngFor="let friend of friends"
+		(click)="onSelectFriend(friend)">
+		<img src="../../../assets/users/{{ friend.properties.photo }}" alt="{{ friend.properties.firstName }}">
+		<p>{{ friend.properties.firstName}} {{ friend.properties.name }}</p>
+	</div>
+</div>

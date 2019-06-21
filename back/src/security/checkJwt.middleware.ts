@@ -12,3 +12,13 @@ export const checkJwt = (req, res, next: NextFunction) => {
     }
     next();
 }
+
+export const checkAdmin = (req, res, next: NextFunction) => {
+    const token = <string>req.headers["authorization"];
+    const claims: Map<string, any> = Security.getIdentity(token);
+    if (claims.get('role') !== 'admin') {
+        res.status(401).send();
+        return;
+    }
+    next();
+}
