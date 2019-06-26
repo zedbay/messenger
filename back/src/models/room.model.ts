@@ -8,8 +8,7 @@ export class Room {
 		if (!resultat) {
 			return false;
 		}
-		const date = new Date().toString();
-		const request = 
+		const request =
 			`MATCH 
 				(r:Room),
 				(u1:User),
@@ -19,7 +18,7 @@ export class Room {
 				ID(u2) = ${v1.int(u2)} AND 
 				ID(r) = ${resultat.identity.low}
 			CREATE 
-				(m:Message { content: "${content}", date: "${date}"}),
+				(m:Message { content: "${content}", date: "${new Date().toString()}),
 				(m)-[:IN]->(r),
 				(u1)-[:SEND]->(m)
 			RETURN
@@ -32,7 +31,7 @@ export class Room {
 	}
 
 	public static async getMessagesOfRoom(u1: number, u2: number) {
-		let request = 
+		let request =
 			`MATCH 
 				(u1:User),
 				(u2:User),
@@ -44,10 +43,11 @@ export class Room {
 				(u1)-[:CHAT]->(r)<-[:CHAT]-(u2) AND
 				(m)-[:IN]->(r) AND
 				(u1)-[:SEND]->(m)
-			RETURN m`;
+			RETURN 
+				m`;
 		let resultat = await Neo4j.execute(request);
 		let messageProprietaire = resultat.records.map(element => element.get(0));
-		request = 
+		request =
 			`MATCH 
 				(u1:User),
 				(u2:User),
@@ -59,10 +59,11 @@ export class Room {
 				(u1)-[:CHAT]->(r)<-[:CHAT]-(u2) AND
 				(m)-[:IN]->(r) AND
 				(u2)-[:SEND]->(m)
-			RETURN m`;
+			RETURN 
+				m`;
 		resultat = await Neo4j.execute(request);
 		let messageDestinataire = resultat.records.map(element => element.get(0));
-		let messages = [ ...messageDestinataire, ...messageProprietaire];
+		let messages = [...messageDestinataire, ...messageProprietaire];
 		return messages.sort(Room.sortByDate);
 	}
 
@@ -86,7 +87,7 @@ export class Room {
 	}
 
 	public static async create(u1: number, u2: number) {
-		const name = Room.createName(u1, u2);
+		const name = Room.getName(u1, u2);
 		const request =
 			`MATCH 
 				(u:User), (u1:User)
@@ -97,14 +98,18 @@ export class Room {
 				(r:Room { name: "${name}" }),
 				(u1)-[:CHAT]->(r),
 				(u)-[:CHAT]->(r)
-			RETURN r`;
+			RETURN 
+				r`;
 		const resultat = await Neo4j.execute(request);
 		if (resultat) return resultat.records[0].get(0);
 		return false;
 	}
 
-	private static createName(u1: number, u2: number) {
-		return u1 + "&&&" + u2;
+	private static getName(u1: number, u2: number) {
+		if (u1 > u2) {
+			return u1 + "&&&" + u2;
+		}
+		return u2 + "&&&" + u1;
 	}
 
 	private static sortByDate(date1: any, date2: any) {
@@ -112,7 +117,7 @@ export class Room {
 		const d2 = new Date(date2.properties.date);
 		if (d1 > d2) {
 			return 1;
-		} 
+		}
 		if (d2 > d1) {
 			return -1;
 		}

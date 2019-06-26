@@ -5,7 +5,7 @@ import { checkJwt, checkAdmin } from '../security/checkJwt.middleware';
 
 export class UserRoutes {
 
-    public static init(express: Express) {
+	public static init(express: Express) {
 		const router: Router = Router();
 		UserRoutes.mountPrivateRoutes(router);
 		UserRoutes.mountPublicRoutes(router);
@@ -14,27 +14,17 @@ export class UserRoutes {
 	}
 
 	private static mountPublicRoutes(router: Router) {
-        router.post('/login', (req, res) => {
-			Security.login(req, res);
-        });
-        router.get('/tokenIsOk',  (req, res) => {
-            UserHandler.tokenIsOk(req, res);
-        }); 
+		router.post('/login', Security.login);
+		router.get('/tokenIsOk', UserHandler.tokenIsOk);
 	}
 
 	private static mountPrivateRoutes(router: Router) {
-		router.get('/whoami', checkJwt, (req, res) => {
-			UserHandler.whoami(req, res);
-		});
-		router.get('/user/friends', checkJwt, (req, res) => {
-			UserHandler.getFriends(req, res);
-		});
+		router.get('/whoami', checkJwt, UserHandler.whoami);
+		router.get('/user/friends', checkJwt, UserHandler.getFriends);
 	}
-	
+
 	private static mountAdminRoutes(router: Router) {
-		router.post('/user/role', checkJwt, checkAdmin, (req, res) => {
-			UserHandler.modifyRole(req, res);
-		});
-    }
-    
+		router.post('/user/role', checkJwt, checkAdmin, UserHandler.modifyRole);
+	}
+
 }
