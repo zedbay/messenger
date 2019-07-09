@@ -1,7 +1,7 @@
 import * as jwt from 'jsonwebtoken';
 import { NextFunction } from 'connect';
 import { Security } from './security';
-import * as config from '../config.json';
+import * as config from '../../config.json';
 
 export const checkJwt = (req, res, next: NextFunction) => {
 	if (config['unsecure']) {
