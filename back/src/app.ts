@@ -18,7 +18,7 @@ class App {
 	}
 
 	private mountMiddleWare() {
-		this.express.use(cors({ credentials: true, origin: 'http://localhost:4200' }));
+		this.express.use(cors({ credentials: true, origin: 'http://localhost:3000' }));
 		this.express.use(cors());
 		this.express.use(bodyParser.json());
 		this.express.use(bodyParser.urlencoded({ extended: false }));
