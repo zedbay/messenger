@@ -8,9 +8,14 @@ export class UserHandler {
 		return res.status(200).json({ isOk: Security.tokenIsOk(token) });
 	}
 
-	public static async getFriends(req: any, res: any) {
+	public static async getFriendsByClaims(req: any, res: any) {
 		const claims: Map<string, any> = Security.getIdentity(req.headers["authorization"]);
-		const resultat = await User.getFriends(claims);
+		const resultat = await User.getFriends(claims.get('id'));
+		return res.status(200).json({ data: resultat });
+	}
+
+	public static async getFriendsById(req: any, res: any) {
+		const resultat = await User.getFriends(req.params.id);
 		return res.status(200).json({ data: resultat });
 	}
 

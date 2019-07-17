@@ -24,12 +24,12 @@ export class User {
 		return Neo4j.execute(request);
 	}
 
-	public static async getFriends(claims: Map<string, any>) {
+	public static async getFriends(id: number) {
 		const request =
 			`MATCH 
                 (u:User), (u)-[:FRIEND]-(u1:User) 
             WHERE 
-                ID(u) = ${v1.int(claims.get('id'))} 
+                ID(u) = ${v1.int(id)} 
             RETURN 
 				u1`;
 		const resultat = await Neo4j.execute(request);

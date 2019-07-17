@@ -16,11 +16,12 @@ export class UserRoutes {
 	private static mountPublicRoutes(router: Router) {
 		router.post('/login', Security.login);
 		router.get('/tokenIsOk', UserHandler.tokenIsOk);
+		router.get('/user/friendsList/:idUser', UserHandler.getFriendsById);
 	}
 
 	private static mountPrivateRoutes(router: Router) {
 		router.get('/whoami', checkJwt, UserHandler.whoami);
-		router.get('/user/friends', checkJwt, UserHandler.getFriends);
+		router.get('/user/friendsList', checkJwt, UserHandler.getFriendsByClaims);
 	}
 
 	private static mountAdminRoutes(router: Router) {
