@@ -8,7 +8,7 @@ import { MyServer } from './server';
 class App {
 
 	public express: express.Express = express();
-	private router: MainRouter;
+	public router: MainRouter;
 	public myserver: MyServer;
 
 	constructor() {
@@ -18,8 +18,10 @@ class App {
 	}
 
 	private mountMiddleWare() {
-		this.express.use(cors({ credentials: true, origin: 'http://localhost:3000' }));
-		this.express.use(cors());
+		this.express.use(cors({ credentials: true, origin: [
+			'http://localhost:4200',
+			'http://localhost:3000'
+		]}));
 		this.express.use(bodyParser.json());
 		this.express.use(bodyParser.urlencoded({ extended: false }));
 	}

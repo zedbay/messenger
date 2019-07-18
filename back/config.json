@@ -1,4 +1,11 @@
 {
 	"port": 8085,
-	"unsecure": false
+	"unsecure": false,
+	"neo4j": {
+		"credential": {
+			"identifiant": "neo4j",
+			"password": "azerty"
+		},
+		"URL": "bolt://neo4j:7687"
+	}
 }
